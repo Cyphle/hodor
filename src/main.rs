@@ -17,6 +17,18 @@ async fn main() -> Result<(), sqlx::Error> {
     let listener = tokio::net::TcpListener::bind("0.0.0.0:3000").await.unwrap();
     axum::serve(listener, app).await.unwrap();
 
+    let pool = PgPoolOptions::new()
+        .max_connections(5)
+        .connect("postgres://postgres:password@localhost/test").await?;
+
+    let row: (i64,) = get_user(&pool, 150_i64).await?;
+
+    assert_eq!(row.0, 150);
+
+    // run migrations at startup
+    sqlx::migrate!("./migrations").run(&pool).await?;
+
+
     Ok(())
 }
 
@@ -28,22 +40,9 @@ fn build_app() -> Router {
         .route("/users", post(create_user))
 }
 
-#[cfg(not(test))]
 async fn get_user(pool: &Pool<Postgres>, id: i64) -> Result<(i64,), sqlx::Error> {
     // Postgres uses positional parameters like $1
     let row: (i64,) = sqlx::query_as("SELECT $1")
-        .bind(id)
-        .fetch_one(pool)
-        .await?;
-
-    Ok(row)
-}
-
-// For tests, use an in-memory Sqlite database so no external DB is required.
-#[cfg(test)]
-async fn get_user(pool: &sqlx::SqlitePool, id: i64) -> Result<(i64,), sqlx::Error> {
-    // Sqlite uses ?1 style parameters
-    let row: (i64,) = sqlx::query_as("SELECT ?1")
         .bind(id)
         .fetch_one(pool)
         .await?;
@@ -88,6 +87,16 @@ struct User {
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    async fn get_user(pool: &sqlx::SqlitePool, id: i64) -> Result<(i64,), sqlx::Error> {
+        // Sqlite uses ?1 style parameters
+        let row: (i64,) = sqlx::query_as("SELECT ?1")
+            .bind(id)
+            .fetch_one(pool)
+            .await?;
+
+        Ok(row)
+    }
 
     #[tokio::test]
     async fn root_returns_hello_world() {
