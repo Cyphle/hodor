@@ -51,3 +51,6 @@ This flow is not supported and it is discouraged to use as it is not secure.
 Even if there is, for the moment, no dedicated file describing all aspect of licencing, this project is open source, free to use, just add thanks when you use it.
 
 I am not responsible for any damages caused by using this software nor security branch, you are solely responsible for verifying what you use, especially when it comes to security matters as security is a matter of a whole system and not just IDP :-)
+
+## About
+I am a senior software engineer who likes trying new things. However, it is the first open source project that I launch, please be indulgent, but if you want to give feedback, please do so. 
