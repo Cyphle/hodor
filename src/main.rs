@@ -2,10 +2,11 @@ use axum::http::StatusCode;
 use axum::routing::{get, post};
 use axum::{Json, Router};
 use serde::{Deserialize, Serialize};
+use sqlx::{Pool, Postgres};
 use sqlx::postgres::PgPoolOptions;
 
 #[tokio::main]
-async fn main() {
+async fn main() -> Result<(), sqlx::Error> {
     // initialize tracing
     tracing_subscriber::fmt::init();
 
@@ -28,12 +29,21 @@ async fn main() {
         .max_connections(5)
         .connect("postgres://postgres:password@localhost/test").await?;
 
-    // Make a simple query to return the given parameter (use a question mark `?` instead of `$1` for MySQL/MariaDB)
-    let row: (i64,) = sqlx::query_as("SELECT $1")
-        .bind(150_i64)
-        .fetch_one(&pool).await?;
+    let row = get_user(&pool, 150).await?;
 
     assert_eq!(row.0, 150);
+
+    Ok(())
+}
+
+async fn get_user(pool: &Pool<Postgres>, id: i64) -> Result<(i64,), sqlx::Error> {
+    // Make a simple query to return the given parameter (use a question mark `?` instead of `$1` for MySQL/MariaDB)
+    let row: (i64,) = sqlx::query_as("SELECT $1")
+        .bind(id)
+        .fetch_one(pool)
+        .await?;
+
+    Ok(row)
 }
 
 // basic handler that responds with a static string
