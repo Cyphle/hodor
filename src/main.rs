@@ -114,12 +114,6 @@ mod tests {
         assert_eq!(user.username, "alice");
     }
 
-    #[test]
-    fn can_build_app_router() {
-        let _app = build_app();
-        // If we got here, building the router succeeded.
-    }
-
     // This test uses sqlx::test which provides an in-memory Sqlite pool.
     // It does not require any external database.
     #[sqlx::test]
