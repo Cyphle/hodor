@@ -26,40 +26,6 @@ export const ROUTES_PATHS: RouteDefinitionWithComponent[] = [
     index: true, 
     element: <Home />,
     isAuth: false
-  },
-  {
-    id: 1,
-    path: 'accounts',
-    element: <AccountsPage />,
-    name: 'Mes comptes',
-    isAuth: true
-  },
-  {
-    path: 'accounts/:id',
-    element: <AccountPage />,
-    loader: accountParamsLoader,
-    isAuth: true
-  },
-  {
-    id: 2,
-    path: 'profile',
-    element: <Profile />,
-    name: 'Profil',
-    isAuth: true
-  },
-  {
-    id: 3,
-    path: 'registration',
-    element: <Registration />,
-    name: 'S\'inscrire',
-    isAuth: false
-  },
-  {
-    id: 4,
-    path: 'login',
-    element: <Login />,
-    name: 'Se connecter',
-    isAuth: false
   }
 ];
 

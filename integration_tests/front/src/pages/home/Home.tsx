@@ -1,18 +1,42 @@
-import { GoToRegistrationButton } from '../../components/go-to-registration-button/GoToRegistrationButton.tsx';
 import './Home.scss';
+import {BASE_PATH} from "../../helpers/http.ts";
+import {Button} from 'antd';
 
 export const Home = () => {
 
-  // TODO clean
-  // useEffect(() => {
-  //   fetch(`${BASE_PATH}/set`, {})
-  //   .then((data) => {
-  //     console.log('data', data);
-  //   })
-  //   .catch((err) => {
-  //     console.log('err', err);
-  //   });
-  // }, []);
+
+    const checkMe = () => {
+        fetch(`${BASE_PATH}/api/users/me`, {
+        })
+            .then((response: Response) => {
+                return response.json();
+            })
+            .then(data => {
+                console.log(data);
+            });
+    }
+
+    const logout = () => {
+        fetch(`${BASE_PATH}/logout`, {
+        })
+            .then((response: Response) => {
+                return response.json();
+            })
+            .then(data => {
+                console.log(data);
+            });
+    }
+
+    const testDb = () => {
+        fetch(`${BASE_PATH}/test`, {
+        })
+            .then((response: Response) => {
+                return response.json();
+            })
+            .then(data => {
+                console.log(data);
+            });
+    }
 
   return (
     <div className="homepage">
@@ -21,21 +45,17 @@ export const Home = () => {
         <p>Un gestionnaire de compte bancaire facile et familial</p>
       </div>
 
-      <section>
-        <h2>Pour suivre facilement tes comptes</h2>
+        <div>
+            <Button onClick={handleLogin} type="primary" htmlType="submit">
+                Connexion
+            </Button>
 
-        <p>Crée des comptes et ajoute tes dépenses en fonction de leurs natures</p>
+            <Button onClick={checkMe} type="primary" htmlType="submit">USERS ME</Button>
 
-        <GoToRegistrationButton />
-      </section>
+            <Button onClick={logout} type="primary" htmlType="submit">LOGOUT</Button>
 
-      <section>
-        <h2>Des comptes personnels, commun et épargne</h2>
-
-        <p>Différencie tes comptes personnels, commun et épargne. Partage ceux que tu veux avec tes contacts</p>
-
-        <GoToRegistrationButton />
-      </section>
+            <Button onClick={testDb} type="primary" htmlType="submit">TEST database</Button>
+        </div>
     </div>
   )
 }
