@@ -22,4 +22,5 @@ test('should forge an OAuth2 access token using password flow with a confidentia
       expect(tokenBody).toHaveProperty('access_token');
       expect(tokenBody).toHaveProperty('token_type', 'Bearer');
       expect(tokenBody).toHaveProperty('expires_in');
+      expect(tokenBody).toHaveProperty('scope', 'profile email');
 });
