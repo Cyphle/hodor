@@ -1,5 +1,6 @@
 mod config;
 mod tools;
+mod infra;
 
 use axum::http::StatusCode;
 use axum::routing::{get, post};
@@ -13,7 +14,7 @@ use crate::tools::capitalize::capitalize;
 #[tokio::main]
 async fn main() -> Result<(), sqlx::Error> {
     let application_config = config::config::AppConfig::new().unwrap();
-    config::logger::config(capitalize(&application_config.logging.level));
+    config::logger::init_logger(capitalize(&application_config.logging.level));
     start().await?;
 
 

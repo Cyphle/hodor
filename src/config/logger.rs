@@ -4,7 +4,7 @@ use log::LevelFilter;
 use std::io::Write;
 use crate::tools::capitalize::capitalize;
 
-pub fn config(log_level: String) {
+pub fn init_logger(log_level: String) {
     let log_level = capitalize(&log_level).parse::<LevelFilter>().unwrap_or(LevelFilter::Info);
 
     Builder::new()
