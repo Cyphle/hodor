@@ -24,6 +24,10 @@ Hodor is not an authorization server.
 Hodor is primarily an OAuth2 based Identity Provider.
 
 ### Client
+A confidential client is ....
+
+
+A public client is ...
 
 ### User
 
@@ -47,10 +51,18 @@ This flow is not supported and it is discouraged to use as it is not secure.
 - custom claims
 - pour l'activer il faut ajouter le scope openid
 
+## How to develop
+
+### Database
+Database client is sqlx. It also manages migrations.
+
+### Tests
+Functional tests are written using Playwright which is a great tool to assert that authentication flows work.
+
 ## Licence
 Even if there is, for the moment, no dedicated file describing all aspect of licencing, this project is open source, free to use, just add thanks when you use it.
 
 I am not responsible for any damages caused by using this software nor security branch, you are solely responsible for verifying what you use, especially when it comes to security matters as security is a matter of a whole system and not just IDP :-)
 
 ## About
-I am a senior software engineer who likes trying new things. However, it is the first open source project that I launch, please be indulgent, but if you want to give feedback, please do so. 
+I am a software engineer who likes trying new things. However, it is the first open source project that I launch, please be indulgent, but if you want to give feedback, please do so. 
