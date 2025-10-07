@@ -2,11 +2,11 @@ use axum::{http::StatusCode, Json};
 use serde::Serialize;
 
 #[derive(Serialize, Debug, PartialEq)]
-struct Health {
+pub struct Health {
     status: String,
 }
 
-async fn health() -> (StatusCode, Json<Health>) {
+pub async fn health() -> (StatusCode, Json<Health>) {
     (StatusCode::CREATED, Json(Health { status: "ok".to_string() }))
 }
 

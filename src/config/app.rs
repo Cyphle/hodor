@@ -1,6 +1,7 @@
 use crate::{create_user, root};
 use axum::routing::{get, post};
 use axum::Router;
+use crate::infra::api::technical::health;
 
 pub fn configure_routes() -> Router {
     Router::new()
@@ -8,6 +9,8 @@ pub fn configure_routes() -> Router {
         .route("/", get(root))
         // `POST /users` goes to `create_user`
         .route("/users", post(create_user))
+        // TECHNICAL
+        .route("/health", get(health))
 }
 
 #[cfg(test)]
