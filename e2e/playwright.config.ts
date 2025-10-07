@@ -30,9 +30,12 @@ export default defineConfig({
     baseURL: 'http://localhost:3000',
   },
   webServer: {
-    command: 'APP_MODE=test cargo run',
+    command: 'cargo run',
     url: 'http://localhost:3000/health',
     timeout: 60_000,
+    reuseExistingServer: !process.env.CI,
+    cwd: require('path').resolve(__dirname, '..'),
+    env: { APP_MODE: 'test' },
   },
 
   /* Configure projects for major browsers */
@@ -72,11 +75,4 @@ export default defineConfig({
     //   use: { ...devices['Desktop Chrome'], channel: 'chrome' },
     // },
   ],
-
-  /* Run your local dev server before starting the tests */
-  // webServer: {
-  //   command: 'npm run start',
-  //   url: 'http://localhost:3000',
-  //   reuseExistingServer: !process.env.CI,
-  // },
 });
