@@ -3,40 +3,32 @@ mod tools;
 mod infra;
 
 use axum::http::StatusCode;
-use axum::routing::{get, post};
-use axum::{Json, Router};
+use axum::{Extension, Json};
 use serde::{Deserialize, Serialize};
-use sqlx::{Error, Pool, Postgres};
-use sqlx::postgres::PgPoolOptions;
+use sqlx::{Pool, Postgres};
 use crate::config::app::configure_routes;
+use crate::config::database::connect;
 use crate::tools::capitalize::capitalize;
 
 #[tokio::main]
-async fn main() -> Result<(), sqlx::Error> {
-    let application_config = config::config::AppConfig::new().unwrap();
+async fn main() -> Result<(), Box<dyn std::error::Error>> {
+
+    let application_config = config::config::AppConfig::new()?;
     config::logger::init_logger(capitalize(&application_config.logging.level));
-    start().await?;
 
-
-
-    // ===========> BELOW ARE SOME EXAMPLES
-    let pool = PgPoolOptions::new()
-        .max_connections(5)
-        .connect("postgres://postgres:password@localhost/test").await?;
-
-    let row: (i64,) = get_user(&pool, 150_i64).await?;
-
-    assert_eq!(row.0, 150);
+    let db_connection = connect(&application_config.database).await;
 
     // run migrations at startup
-    sqlx::migrate!("./migrations").run(&pool).await?;
+    sqlx::migrate!("./migrations").run(&db_connection).await?;
+
+    start(db_connection).await?;
 
 
     Ok(())
 }
 
-async fn start() -> Result<(), Error> {
-    let app = configure_routes();
+async fn start(pool: Pool<Postgres>) -> Result<(), sqlx::Error> {
+    let app = configure_routes(pool);
     let listener = tokio::net::TcpListener::bind("0.0.0.0:3000").await.unwrap();
     axum::serve(listener, app).await?;
     Ok(())
@@ -55,6 +47,16 @@ async fn get_user(pool: &Pool<Postgres>, id: i64) -> Result<(i64,), sqlx::Error>
 // basic handler that responds with a static string
 async fn root() -> &'static str {
     "Hello, World!"
+}
+
+async fn db_check(
+    Extension(pool): Extension<Pool<Postgres>>,
+) -> Result<Json<i64>, (StatusCode, String)> {
+    let val: i64 = sqlx::query_scalar("SELECT 1")
+        .fetch_one(&pool)
+        .await
+        .map_err(|e| (StatusCode::INTERNAL_SERVER_ERROR, e.to_string()))?;
+    Ok(Json(val))
 }
 
 async fn create_user(

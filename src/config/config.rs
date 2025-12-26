@@ -1,5 +1,6 @@
 use config::{Config, Environment, File};
 use serde::Deserialize;
+use crate::config::database::DatabaseConfig;
 
 #[derive(Debug, Deserialize, Clone)]
 pub struct AppServerConfig {
@@ -16,6 +17,7 @@ pub struct LoggingConfig {
 pub struct AppConfig {
     pub app: AppServerConfig,
     pub logging: LoggingConfig,
+    pub database: DatabaseConfig,
 }
 
 impl AppConfig {

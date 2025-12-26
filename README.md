@@ -59,6 +59,9 @@ Database client is sqlx. It also manages migrations.
 ### Tests
 Functional tests are written using Playwright which is a great tool to assert that authentication flows work.
 
+How to launch all Playwright tests: `npx playwright test`
+
+
 ## Licence
 Even if there is, for the moment, no dedicated file describing all aspect of licencing, this project is open source, free to use, just add thanks when you use it.
 
